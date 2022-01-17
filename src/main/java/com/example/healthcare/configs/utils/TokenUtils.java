@@ -56,7 +56,6 @@ public class TokenUtils {
     }
 
 
-
     public static UserType getUserTypeFromToken(String token, String secret) {
         String type;
         UserType userType = null;
@@ -100,12 +99,11 @@ public class TokenUtils {
     }
 
 
-    public static boolean validateToken(String token, UserDetails userDetails, String secret) {
-//        final String username = getUsernameFromToken(token, secret);
-//        final Date expiration = getExpirationDate(token, secret);
-//        return username.equals(userDetails.getUsername()) &&
-//                expiration.after(new Date(System.currentTimeMillis()));
-        return true;
+    public static boolean validateToken(String token, UserDetails userDetails, String secret, HttpServletRequest request) {
+        final String username = getUsernameFromToken(token, secret, request);
+        final Date expiration = getExpirationDate(token, secret);
+        return username.equals(userDetails.getUsername()) &&
+                expiration.after(new Date(System.currentTimeMillis()));
     }
 
 

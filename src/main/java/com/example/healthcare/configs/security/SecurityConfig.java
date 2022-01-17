@@ -103,14 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-**").permitAll()
                 .antMatchers("/v3/api-docs").permitAll()
                 .antMatchers("/webjars/**").permitAll()
-//                .antMatchers(AuthUri.baseUri + "**", HomePageUri.baseUri + "**").permitAll()
-//                .antMatchers(HttpMethod.GET, TrueCostUri.list).permitAll()
-//                .antMatchers(PropertyUri.BASE_URI).permitAll()
-//                .antMatchers(PropertyUri.BASE_URI + PropertyUri.MAP_URI).permitAll()
-//                .antMatchers(PropertyUri.BASE_URI + PropertyUri.SEARCH_DATA_URI).permitAll()
-//                .antMatchers(PropertyUri.BASE_URI + PropertyUri.PROPERTY_URI).permitAll()
-//                .antMatchers(PropertyUri.BASE_URI + PropertyUri.SCHEDULE_URI).permitAll()
-//                .antMatchers(AdminInfoUri.baseUri + AdminInfoUri.CONTACT_US).permitAll()
+                .antMatchers(AuthUri.BASE + "**").permitAll()
                 .anyRequest().authenticated();
 
         httpSecurity
