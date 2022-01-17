@@ -1,7 +1,6 @@
 package com.example.healthcare.controller;
 
 
-import com.example.healthcare.repository.DoctorsRepository;
 import com.example.healthcare.service.AuthService;
 import com.example.healthcare.util.dto.DoctorDto;
 import com.example.healthcare.util.exceptionhandler.exceptions.DuplicateException;
@@ -17,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthController {
-    @Autowired
-    private DoctorsRepository doctorsRepository;
+
     @Autowired
     private AuthService authService;
 

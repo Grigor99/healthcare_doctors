@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         String code = UUID.randomUUID().toString();
         doctor.setEmailCode(code + doctor.getUsername());
         doctorsRepository.save(doctor);
-        emailService.sendEmail(doctor.getUsername(), "code:" + (code + doctor.getUsername()));
+        emailService.sendEmail(doctor.getUsername(), "code confirmation: ", (code + doctor.getUsername()));
     }
 
 
