@@ -4,7 +4,6 @@ import com.example.healthcare.configs.AuthToken;
 import com.example.healthcare.configs.security.service.DetailsService;
 import com.example.healthcare.configs.utils.TokenUtils;
 import com.example.healthcare.util.exceptionhandler.ExceptionHandler;
-import com.example.healthcare.util.exceptionhandler.exceptions.UnauthorizedException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,12 +44,10 @@ public class AuthTokenFilter extends UsernamePasswordAuthenticationFilter {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 String username = TokenUtils.getUsernameFromToken(authToken, secret, request);
                 UserDetails userDetails = detailsService.loadUserByUsername(username);
-                if (TokenUtils.validateToken(authToken, userDetails, secret, request)) {
+                if (TokenUtils.validateToken(authToken, userDetails, secret)) {
                     AuthToken authentication = new AuthToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                } else {
-                    throw new UnauthorizedException("token expire or invalid username ");
                 }
             }
         } catch (Exception ex) {
