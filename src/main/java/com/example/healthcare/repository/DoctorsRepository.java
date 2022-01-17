@@ -7,4 +7,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DoctorsRepository extends MongoRepository<Doctors, String> {
     Doctors findByUsernameAndIsRemovedFalse(String username);
+
+    boolean existsByUsernameAndIsRemovedFalse(String username);
+
+    Doctors findByEmailCode(String code);
+
 }

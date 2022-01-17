@@ -56,7 +56,27 @@ public class Doctors implements Serializable {
     @Field(name = "is_removed")
     private Boolean isRemoved;
 
+    @Field(name = "doctor_status")
+    private DOCTOR_STATUS doctorStatus;
+
     @Field(name = "authorities")
     private String authorities = UserType.DOCTOR.getLabel();
+    @Field(name = "doctoral_code")
+    private String doctoralCode = "doctors_code_8988998991111_UUUU_LLL)*(&(((JKHJH%";
+    @Field(name = "email_code")
+    private String emailCode;
 
+    public enum DOCTOR_STATUS {
+        REGISTERED, ACTIVE, BLOCKED;
+    }
+
+    public Doctors(String firstName, String lastName, String username, String password, String specialProfession, String awards, String biography) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.specialProfession = specialProfession;
+        this.awards = awards;
+        this.biography = biography;
+    }
 }

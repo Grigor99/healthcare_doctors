@@ -14,6 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DoctorDto implements Serializable {
+    private String specialCode;
     private String firstName;
     private String lastName;
     private String username;
