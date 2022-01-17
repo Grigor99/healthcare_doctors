@@ -21,7 +21,7 @@ public class DetailsServiceImpl implements DetailsService {
         Doctors doctor = null;
 
         if (username != null) {
-            doctor = this.doctorsRepository.findByUsernameAndIsRemovedFalse(username);
+            doctor = this.doctorsRepository.findByUsernameAndRemovedFalse(username);
         }
 
         if (doctor == null) {

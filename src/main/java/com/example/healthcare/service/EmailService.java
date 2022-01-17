@@ -1,6 +1,7 @@
 package com.example.healthcare.service;
 
 
+import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
@@ -17,11 +18,13 @@ public class EmailService {
     private AmazonSimpleEmailService client;
     @Value("${email.sender}")
     private String source;
+    @Value("${aws.ses.region}")
+    private String region;
 
     public EmailService() {
         client =
                 AmazonSimpleEmailServiceClientBuilder.standard()
-                        .withCredentials(new ProfileCredentialsProvider("AwsCredentials.properties"))
+                        .withCredentials(new  ClasspathPropertiesFileCredentialsProvider("AwsCredentials.properties"))
                         .withRegion(Regions.US_EAST_1).build();
     }
 

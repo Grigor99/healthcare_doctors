@@ -48,10 +48,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void sign_up(DoctorDto dto) throws DuplicateException, UnauthorizedException {
-        DuplicateException.check(doctorsRepository.existsByUsernameAndIsRemovedFalse(dto.getUsername()), "duplicate account");
+        DuplicateException.check(doctorsRepository.existsByUsernameAndRemovedFalse(dto.getUsername()), "duplicate account");
         UnauthorizedException.check(!dto.getSpecialCode().equals("doctors_code_8988998991111_UUUU_LLL)*(&(((JKHJH%"), "wrong code");
         Doctors doctor = new Doctors(dto.getFirstName(), dto.getLastName(), dto.getUsername(), dto.getPassword(), dto.getSpecialProfession(), dto.getAwards(), dto.getBiography());
         doctor.setDoctorStatus(Doctors.DOCTOR_STATUS.REGISTERED);
+        doctor.setRemoved(false);
         doctorsRepository.save(doctor);
         String code = UUID.randomUUID().toString();
         doctor.setEmailCode(code + doctor.getUsername());

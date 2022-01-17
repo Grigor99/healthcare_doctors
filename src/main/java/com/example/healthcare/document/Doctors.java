@@ -53,8 +53,8 @@ public class Doctors implements Serializable {
     @Field(name = "last_modified")
     private Instant lastModified;
 
-    @Field(name = "is_removed")
-    private Boolean isRemoved;
+    @Field(name = "removed")
+    private boolean removed;
 
     @Field(name = "doctor_status")
     private DOCTOR_STATUS doctorStatus;
