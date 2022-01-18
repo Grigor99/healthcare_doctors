@@ -6,6 +6,7 @@ import com.example.healthcare.configs.utils.TokenUtils;
 import com.example.healthcare.configs.utils.UserType;
 import com.example.healthcare.document.Doctors;
 import com.example.healthcare.elastic.index.Docs;
+import com.example.healthcare.elastic.repo.DocsRepo;
 import com.example.healthcare.repository.DoctorsRepository;
 import com.example.healthcare.util.dto.DoctorDto;
 import com.example.healthcare.util.exceptionhandler.ExceptionHandler;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,7 +36,11 @@ import java.util.concurrent.Executors;
 public class AuthServiceImpl implements AuthService {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ExceptionHandler.class);
 
+    @Autowired
     private ElasticsearchOperations elasticsearchOperations;
+
+    @Autowired
+    private DocsRepo docsRepo;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -104,9 +110,10 @@ public class AuthServiceImpl implements AuthService {
                 doc.setExperience(doctor.getExperience());
                 doc.setFirstName(doctor.getFirstName());
                 doc.setLastName(doctor.getLastName());
-                elasticsearchOperations.save(doc, "docs");
+                elasticsearchOperations.save(doc, IndexCoordinates.of("docs"));
+                System.out.println("saved : " + doc.getId());
             } catch (Exception e) {
-                LOGGER.error("elastic sign up doctor index : ", e.getMessage());
+                LOGGER.error("elastic sign up doctor index error : ", e.getMessage());
             } finally {
                 service.shutdown();
             }
