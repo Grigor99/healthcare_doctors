@@ -110,6 +110,7 @@ public class AuthServiceImpl implements AuthService {
                 doc.setExperience(doctor.getExperience());
                 doc.setFirstName(doctor.getFirstName());
                 doc.setLastName(doctor.getLastName());
+                doc.setSpecialProfession(doctor.getSpecialProfession());
                 elasticsearchOperations.save(doc, IndexCoordinates.of("docs"));
                 System.out.println("saved : " + doc.getId());
             } catch (Exception e) {

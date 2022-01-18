@@ -28,6 +28,9 @@ public class Docs implements Serializable {
     private String biography;
     @Field(type = FieldType.Integer)
     private Integer experience;
+    @Field(type = FieldType.Keyword)
+    private String specialProfession;
+
 }
 
 
