@@ -1,6 +1,7 @@
 package com.example.healthcare.util.exceptionhandler;
 
 import com.example.healthcare.util.exceptionhandler.exceptions.DuplicateException;
+import com.example.healthcare.util.exceptionhandler.exceptions.NotFoundException;
 import com.example.healthcare.util.exceptionhandler.exceptions.UnauthorizedException;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,14 @@ public class ExceptionHandler {
     public ErrorRestResponse handleDuplicateException(DuplicateException ex) {
         LOGGER.error(ex.getMessage() + "::::" + ex.getStackTrace());
         return new ErrorRestResponse(409, ex.getMessage());
+    }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @org.springframework.web.bind.annotation.ExceptionHandler(NotFoundException.class)
+    @ResponseBody
+    public ErrorRestResponse handleNotFoundException(NotFoundException ex) {
+        LOGGER.error(ex.getMessage() + "::::" + ex.getStackTrace());
+        return new ErrorRestResponse(404, ex.getMessage());
     }
 
 

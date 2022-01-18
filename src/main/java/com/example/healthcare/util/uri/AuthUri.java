@@ -5,4 +5,5 @@ public interface AuthUri {
 
     String REGISTER = BASE + "/sign-up";
     String REGISTER_CONFIRM = REGISTER + "/confirm/{code}";
+    String LOGIN = BASE + "/sign-in";
 }

@@ -1,5 +1,6 @@
 package com.example.healthcare.service;
 
+import com.example.healthcare.configs.AuthToken;
 import com.example.healthcare.configs.security.service.DetailsService;
 import com.example.healthcare.configs.utils.TokenUtils;
 import com.example.healthcare.configs.utils.UserType;
@@ -7,11 +8,16 @@ import com.example.healthcare.document.Doctors;
 import com.example.healthcare.repository.DoctorsRepository;
 import com.example.healthcare.util.dto.DoctorDto;
 import com.example.healthcare.util.exceptionhandler.exceptions.DuplicateException;
+import com.example.healthcare.util.exceptionhandler.exceptions.NotFoundException;
 import com.example.healthcare.util.exceptionhandler.exceptions.UnauthorizedException;
 import com.example.healthcare.util.exceptionhandler.exceptions.WrongCodeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,6 +27,11 @@ import java.util.UUID;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Value("${security.accesstoken.secret}")
     protected String accessTokenSecret;
 
@@ -77,4 +88,24 @@ public class AuthServiceImpl implements AuthService {
         result.put("refresh", refreshToken);
         return result;
     }
+
+    @Override
+    public Map<String, String> signIn(String username, String password) throws NotFoundException, UnauthorizedException {
+        Doctors doctor = doctorsRepository.findByUsernameAndRemovedFalse(username);
+        NotFoundException.check(doctor == null, "no account with given username");
+        UnauthorizedException.check(!passwordEncoder.matches(password, doctor.getPassword()), "wrong password");
+        Authentication authentication = authenticationManager.authenticate(new AuthToken(username, password));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        doctorsRepository.save(doctor);
+        UserDetails userDetails = this.detailsService.loadUserByUsername(doctor.getUsername());
+        UserType userType = UserType.getByLabel(userDetails.getAuthorities().iterator().next().getAuthority());
+        String accessToken = TokenUtils.generateToken(userDetails, userType, accessTokenSecret, accessTokenExpiration);
+        String refreshToken = TokenUtils.generateToken(userDetails, userType, refreshTokenSecret, refreshTokenExpiration);
+        Map<String, String> result = new HashMap<>();
+        result.put("token", accessToken);
+        result.put("refresh", refreshToken);
+        return result;
+    }
+
+
 }
