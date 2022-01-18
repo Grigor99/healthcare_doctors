@@ -5,6 +5,7 @@ import com.example.healthcare.configs.security.service.DetailsService;
 import com.example.healthcare.configs.utils.TokenUtils;
 import com.example.healthcare.configs.utils.UserType;
 import com.example.healthcare.document.Doctors;
+import com.example.healthcare.elastic.index.Docs;
 import com.example.healthcare.repository.DoctorsRepository;
 import com.example.healthcare.util.dto.DoctorDto;
 import com.example.healthcare.util.exceptionhandler.ExceptionHandler;
@@ -98,7 +99,12 @@ public class AuthServiceImpl implements AuthService {
 
         service.submit(() -> {
             try {
-
+                Docs doc = new Docs();
+                doc.setBiography(doctor.getBiography());
+                doc.setExperience(doctor.getExperience());
+                doc.setFirstName(doctor.getFirstName());
+                doc.setLastName(doctor.getLastName());
+                elasticsearchOperations.save(doc, "docs");
             } catch (Exception e) {
                 LOGGER.error("elastic sign up doctor index : ", e.getMessage());
             } finally {
