@@ -7,12 +7,15 @@ import com.example.healthcare.configs.utils.UserType;
 import com.example.healthcare.document.Doctors;
 import com.example.healthcare.repository.DoctorsRepository;
 import com.example.healthcare.util.dto.DoctorDto;
+import com.example.healthcare.util.exceptionhandler.ExceptionHandler;
 import com.example.healthcare.util.exceptionhandler.exceptions.DuplicateException;
 import com.example.healthcare.util.exceptionhandler.exceptions.NotFoundException;
 import com.example.healthcare.util.exceptionhandler.exceptions.UnauthorizedException;
 import com.example.healthcare.util.exceptionhandler.exceptions.WrongCodeException;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,9 +26,14 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ExceptionHandler.class);
+
+    private ElasticsearchOperations elasticsearchOperations;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -86,6 +94,19 @@ public class AuthServiceImpl implements AuthService {
         Map<String, String> result = new HashMap<>();
         result.put("token", accessToken);
         result.put("refresh", refreshToken);
+        ExecutorService service = Executors.newSingleThreadExecutor();
+
+        service.submit(() -> {
+            try {
+
+            } catch (Exception e) {
+                LOGGER.error("elastic sign up doctor index : ", e.getMessage());
+            } finally {
+                service.shutdown();
+            }
+        });
+
+
         return result;
     }
 

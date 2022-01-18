@@ -60,6 +60,8 @@ public class Doctors implements Serializable {
 
     @Field(name = "removed")
     private boolean removed;
+    @Field(name = "experience")
+    private Integer experience;
 
     @Field(name = "doctor_status")
     private DOCTOR_STATUS doctorStatus;
