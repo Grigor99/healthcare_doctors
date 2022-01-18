@@ -94,6 +94,7 @@ public class AuthServiceImpl implements AuthService {
         doctor.setDoctorStatus(Doctors.DOCTOR_STATUS.ACTIVE);
         doctor.setEmailCode(null);
         doctorsRepository.save(doctor);
+        makeDocIndex(doctor.getBiography(), doctor.getExperience(), doctor.getFirstName(), doctor.getLastName(), doctor.getSpecialProfession());
         UserDetails userDetails = this.detailsService.loadUserByUsername(doctor.getUsername());
         UserType userType = UserType.getByLabel(userDetails.getAuthorities().iterator().next().getAuthority());
         String accessToken = TokenUtils.generateToken(userDetails, userType, accessTokenSecret, accessTokenExpiration);
@@ -101,24 +102,6 @@ public class AuthServiceImpl implements AuthService {
         Map<String, String> result = new HashMap<>();
         result.put("token", accessToken);
         result.put("refresh", refreshToken);
-        ExecutorService service = Executors.newSingleThreadExecutor();
-
-        service.submit(() -> {
-            try {
-                Docs doc = new Docs();
-                doc.setBiography(doctor.getBiography());
-                doc.setExperience(doctor.getExperience());
-                doc.setFirstName(doctor.getFirstName());
-                doc.setLastName(doctor.getLastName());
-                doc.setSpecialProfession(doctor.getSpecialProfession());
-                elasticsearchOperations.save(doc, IndexCoordinates.of("docs"));
-                System.out.println("saved : " + doc.getId());
-            } catch (Exception e) {
-                LOGGER.error("elastic sign up doctor index error : ", e.getMessage());
-            } finally {
-                service.shutdown();
-            }
-        });
 
 
         return result;
@@ -140,6 +123,29 @@ public class AuthServiceImpl implements AuthService {
         result.put("token", accessToken);
         result.put("refresh", refreshToken);
         return result;
+    }
+
+
+    private void makeDocIndex(String bio, Integer experience, String firstName, String lastName, String profession) {
+        ExecutorService service = Executors.newSingleThreadExecutor();
+
+        service.submit(() -> {
+            try {
+                Docs doc = new Docs();
+                doc.setBiography(bio);
+                doc.setExperience(experience);
+                doc.setFirstName(firstName);
+                doc.setLastName(lastName);
+                doc.setSpecialProfession(profession);
+                elasticsearchOperations.save(doc, IndexCoordinates.of("docs"));
+                System.out.println("saved : " + doc.getId());
+            } catch (Exception e) {
+                LOGGER.error("elastic sign up doctor index error : ", e.getMessage());
+            } finally {
+                service.shutdown();
+            }
+        });
+
     }
 
 
