@@ -2,7 +2,7 @@ package com.example.healthcare.configs;
 
 
 import com.example.healthcare.configs.utils.SecureUser;
-import com.example.healthcare.document.Doctors;
+import com.example.healthcare.documents.Doctors;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 public class SecureUserFactory {

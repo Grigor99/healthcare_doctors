@@ -1,4 +1,4 @@
-package com.example.healthcare.document;
+package com.example.healthcare.documents;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

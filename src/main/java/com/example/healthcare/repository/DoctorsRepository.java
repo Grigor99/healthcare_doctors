@@ -1,6 +1,6 @@
 package com.example.healthcare.repository;
 
-import com.example.healthcare.document.Doctors;
+import com.example.healthcare.documents.Doctors;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +12,5 @@ public interface DoctorsRepository extends MongoRepository<Doctors, String> {
 
     Doctors findByEmailCode(String code);
 
+    Doctors getById(String id);
 }

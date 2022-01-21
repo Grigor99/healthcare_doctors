@@ -2,7 +2,7 @@ package com.example.healthcare.configs.security.service;
 
 
 import com.example.healthcare.configs.SecureUserFactory;
-import com.example.healthcare.document.Doctors;
+import com.example.healthcare.documents.Doctors;
 import com.example.healthcare.repository.DoctorsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,7 +1,9 @@
 package com.example.healthcare.configs.utils;
 
 
-public enum UserType {
+import java.io.Serializable;
+
+public enum UserType  {
     DOCTOR("DOCTOR"),
     PATIENT("PATIENT"),
     ADMIN("ADMIN"),

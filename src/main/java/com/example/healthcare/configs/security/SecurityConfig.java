@@ -11,6 +11,8 @@ import com.example.healthcare.util.uri.AuthUri;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,6 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.SessionManagementFilter;
+@Order(value = Ordered.HIGHEST_PRECEDENCE)
 
 @Configuration
 @EnableWebSecurity
@@ -92,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .addFilterBefore(corsFilter(), SessionManagementFilter.class)
                 .csrf().disable()
-                .antMatcher("/web/api/**")
+                .antMatcher("/healthcare/api/**")
                 .exceptionHandling()
                 .authenticationEntryPoint(this.unauthorizedHandler)
                 .and()
@@ -100,7 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(AuthUri.BASE + "**").permitAll()
+                .antMatchers(AuthUri.AUTH + "**").permitAll()
                 .anyRequest().authenticated();
 
         httpSecurity
@@ -112,5 +115,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .frameOptions()
                 .sameOrigin();
     }
+
 
 }

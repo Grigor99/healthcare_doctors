@@ -1,15 +1,13 @@
-package com.example.healthcare.document;
+package com.example.healthcare.documents;
 
 
 import com.example.healthcare.configs.utils.UserType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -54,10 +52,13 @@ public class Doctors implements Serializable {
     @Field
     private Availability availability;
 
+    @Transient
+    @JsonIgnore
     @CreatedDate
     @Field(name = "created_at")
     private Instant createdAt;
 
+    @Transient
     @LastModifiedDate
     @Field(name = "last_modified")
     private Instant lastModified;
