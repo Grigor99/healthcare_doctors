@@ -30,7 +30,12 @@ public class Docs implements Serializable {
     private Integer experience;
     @Field(type = FieldType.Keyword)
     private String specialProfession;
-
+    @Field(type = FieldType.Keyword)
+    private String day;
+    @Field(type = FieldType.Long)
+    private Long availableFrom;
+    @Field(type = FieldType.Long)
+    private Long availableTo;
 }
 
 

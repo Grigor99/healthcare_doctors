@@ -4,6 +4,7 @@ import com.example.healthcare.configs.AuthToken;
 import com.example.healthcare.configs.security.service.DetailsService;
 import com.example.healthcare.configs.utils.TokenUtils;
 import com.example.healthcare.configs.utils.UserType;
+import com.example.healthcare.document.Availability;
 import com.example.healthcare.document.Doctors;
 import com.example.healthcare.elastic.index.Docs;
 import com.example.healthcare.elastic.repo.DocsRepo;
@@ -79,6 +80,7 @@ public class AuthServiceImpl implements AuthService {
         Doctors doctor = new Doctors(dto.getFirstName(), dto.getLastName(), dto.getUsername(), dto.getPassword(), dto.getSpecialProfession(), dto.getAwards(), dto.getBiography());
         doctor.setDoctorStatus(Doctors.DOCTOR_STATUS.REGISTERED);
         doctor.setRemoved(false);
+        doctor.setAvailability(dto.getAvailability());
         doctorsRepository.save(doctor);
         String code = UUID.randomUUID().toString();
         doctor.setEmailCode(code + doctor.getUsername());
@@ -94,7 +96,8 @@ public class AuthServiceImpl implements AuthService {
         doctor.setDoctorStatus(Doctors.DOCTOR_STATUS.ACTIVE);
         doctor.setEmailCode(null);
         doctorsRepository.save(doctor);
-        makeDocIndex(doctor.getBiography(), doctor.getExperience(), doctor.getFirstName(), doctor.getLastName(), doctor.getSpecialProfession());
+        makeDocIndex(doctor.getBiography(), doctor.getExperience(), doctor.getFirstName(), doctor.getLastName(),
+                doctor.getSpecialProfession(), doctor.getAvailability());
         UserDetails userDetails = this.detailsService.loadUserByUsername(doctor.getUsername());
         UserType userType = UserType.getByLabel(userDetails.getAuthorities().iterator().next().getAuthority());
         String accessToken = TokenUtils.generateToken(userDetails, userType, accessTokenSecret, accessTokenExpiration);
@@ -126,12 +129,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    private void makeDocIndex(String bio, Integer experience, String firstName, String lastName, String profession) {
+    private void makeDocIndex(String bio, Integer experience, String firstName, String lastName, String profession, Availability availability) {
         ExecutorService service = Executors.newSingleThreadExecutor();
 
         service.submit(() -> {
             try {
                 Docs doc = new Docs();
+                doc.setAvailableFrom(availability.getAvailableFrom());
+                doc.setAvailableTo(availability.getAvailableTo());
+                doc.setDay(String.valueOf(availability.getDay()));
                 doc.setBiography(bio);
                 doc.setExperience(experience);
                 doc.setFirstName(firstName);

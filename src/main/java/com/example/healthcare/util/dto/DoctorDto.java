@@ -1,5 +1,6 @@
 package com.example.healthcare.util.dto;
 
+import com.example.healthcare.document.Availability;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,5 @@ public class DoctorDto implements Serializable {
     private String specialProfession;
     private String awards;
     private String biography;
+    private Availability availability;
 }

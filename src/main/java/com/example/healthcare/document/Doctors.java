@@ -50,6 +50,10 @@ public class Doctors implements Serializable {
     @Field(name = "biography")
     private String biography;
 
+
+    @Field
+    private Availability availability;
+
     @CreatedDate
     @Field(name = "created_at")
     private Instant createdAt;
